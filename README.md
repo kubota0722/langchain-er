@@ -1,3 +1,6 @@
 # langchain-er
 
-langchain、langserveの練習用
+### practice
+- langchain
+- langserve
+- langfuse

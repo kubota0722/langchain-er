@@ -1,12 +1,13 @@
 import os
 from dotenv import load_dotenv
+from typing import Dict, Any
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, Request
 from langchain.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from langserve import add_routes
 from pydantic.v1 import BaseModel
-from langchain_core.runnables import RunnableLambda
+from langchain_core.runnables import RunnableLambda, RunnableConfig
 from langfuse import Langfuse
 from langfuse.decorators import observe, langfuse_context
 from langfuse.callback import CallbackHandler
@@ -33,7 +34,6 @@ add_routes(
 )
 
 class CharacterRequest(BaseModel):
-    name: str
     topic: str
 
 class InputLLMChainModel(BaseModel):
@@ -42,35 +42,40 @@ class InputLLMChainModel(BaseModel):
     name: str
     question: str
 
+def get_name(name: str):
+    print(f"get_name function called with: {name}")
+    return {"name": name}
 
-
-def character_controller(character_request: CharacterRequest):
-    print(character_request)
+async def character_controller(input: Dict[str, Any], config: RunnableConfig):
+    name = config.get("name", MY_NAME)
+    print(f"Name from config: {name}")
+    print(f"Input: {input}")
+    
     langfuse_prompt = langfuse.get_prompt("one_question_to_character")
     prompt = ChatPromptTemplate.from_template(langfuse_prompt.get_langchain_prompt())
+    print(f"Prompt: {prompt}")
     
-    
-    model = ChatOpenAI(api_key=OPENAI_API_KEY, model="gpt-4o-mini")
+    model = ChatOpenAI(api_key=OPENAI_API_KEY, model="gpt-4-1106-preview")
     chain = prompt | model
 
-    input = InputLLMChainModel(
+    llm_input = InputLLMChainModel(
         product=PRODUCT_NAME,
         character=MY_FAVORITE_CHARACTER,
-        name=MY_NAME,
-        question=character_request["topic"]
+        name=name,
+        question=input["topic"]
     )
 
-    generated_answer = chain.invoke(input=input.dict(), config={"callbacks": [langfuse_handler]})
+    generated_answer = chain.invoke(input=llm_input.dict(), config={"callbacks": [langfuse_handler]})
     return generated_answer
 
-
 add_routes(
-    app=app,
+    app=app,        
     runnable=RunnableLambda(character_controller),
     path="/{name}/character",
-    input_type=CharacterRequest,
+    input_type=Dict[str, Any],
+    #RunnableConfig={"name": str},
+    dependencies=[Depends(get_name)]
 )
-
 
 if __name__ == "__main__":
     import uvicorn

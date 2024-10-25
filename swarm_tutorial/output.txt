@@ -1,0 +1,33 @@
+[
+  {
+    'content': None,
+    'refusal': None,
+    'role': 'assistant',
+    'function_call': None,
+    'tool_calls': [
+      {
+        'id': 'call_icRD2l2okcHlx3PODXT5XnkJ',
+        'function': {
+          'arguments': '{}',
+          'name': 'transfer_to_agent_b'
+        },
+        'type': 'function'
+      }
+    ],
+    'sender': 'Agent A'
+  },
+  {
+    'role': 'tool',
+    'tool_call_id': 'call_icRD2l2okcHlx3PODXT5XnkJ',
+    'tool_name': 'transfer_to_agent_b',
+    'content': '{"assistant": "Agent B"}'
+  },
+  {
+    'content': 'Agent B will help,  \nWith the questions that you have,  \nFear not, friend, ask on!',
+    'refusal': None,
+    'role': 'assistant',
+    'function_call': None,
+    'tool_calls': None,
+    'sender': 'Agent B'
+  }
+]

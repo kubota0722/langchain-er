@@ -46,12 +46,7 @@ def _finalize_all_actions(state: TextState):
 def _routing_next_action(state: TextState):
     print("routing next action")
 
-    if state["next_action"] == "delete":
-        return "delete"
-    elif state["next_action"] == "finalize":
-        return "finalize"
-    else:
-        return
+    return state["next_action"]
 
 
 async def main():
@@ -91,6 +86,7 @@ async def main():
 
     # 初期状態を引数として渡す
     try:
+        print(state)
         result = await app.ainvoke(state)
         print(result)
     except Exception as e:

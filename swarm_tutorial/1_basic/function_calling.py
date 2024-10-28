@@ -23,7 +23,7 @@ def get_weather_in_NewYork(location: str)-> str:
 
 agent = Agent(
     name="Agent",
-    instructions="You are useful AI agent.",
+    instructions="You are a helpful AI agent.",
     functions=[get_weather_in_NewYork, get_wether_in_japan],
 )
 

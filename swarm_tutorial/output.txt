@@ -30,4 +30,54 @@
     'tool_calls': None,
     'sender': 'Agent B'
   }
+],
+messages=[
+    {
+        'content': None,
+        'refusal': None,
+        'role': 'assistant',
+        'function_call': None,
+        'tool_calls': [
+            {
+                'id': 'call_xb9H5XF06OzhUx4OiDYgsrAy',
+                'function': {
+                    'arguments': '{}',
+                    'name': 'update_account_details'
+                },
+                'type': 'function'
+            }
+        ],
+        'sender': 'Agent'
+    },
+    {
+        'role': 'tool',
+        'tool_call_id': 'call_xb9H5XF06OzhUx4OiDYgsrAy',
+        'tool_name': 'update_account_details',
+        'content': 'success'
+    },
+    {
+        'content': 'こんにちは、kk0722-latestさん。アカウントの詳細を最新化しました。何か他にお手伝いできることはありますか？',
+        'refusal': None,
+        'role': 'assistant',
+        'function_call': None,
+        'tool_calls': None,
+        'sender': 'Agent'
+    }
 ]
+
+agent=Agent(
+    name='Agent',
+    model='gpt-4o',
+    instructions=<function instructions at 0x103c525c0>,
+    functions=[
+        <function print_account_details at 0x103c52660>,
+        <function update_account_details at 0x103c52700>
+    ],
+    tool_choice=None,
+    parallel_tool_calls=True
+)
+
+context_variables={
+    'name': 'kk0722-latest',
+    'user_id': 'K0123456789-latest'
+}

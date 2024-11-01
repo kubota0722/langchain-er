@@ -23,7 +23,10 @@ while True:
     messages.append({"role": "user", "content": user_input})
 
     response = client.run(agent=agent, messages=messages)
-    messages = response.messages
+    print("-----messages-----")
+    print(messages)
+    print("------------------")
+    messages.append(response.messages)
     agent = response.agent
 
     pretty_print_messages(messages)

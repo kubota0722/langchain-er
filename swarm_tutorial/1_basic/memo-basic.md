@@ -140,4 +140,52 @@ agentのfunctionsに追加しておけば使ってくれる
 Agent期の文脈を読めてないからかもしれん（n回目）
 
 ## 5. simple_loop_no_helpers.py
-途中
+対話形式のセッション
+`messages = []`の中に保存していく
+
+```
+> あなたの役割について教えてください
+-----messages-----
+[{'role': 'user', 'content': 'あなたの役割について教えてください'}]
+------------------
+Agent: もちろんです。私はAIアシスタントで、情報提供や質問への回答、さまざまなトピックに関するアドバイスを提供するために設計されています。例えば、一般的な知識、技術的なサポート、言語翻訳、学習支援などがあります。また、クリエイティブなアイデア出しや問題解決の手助けも行います。何かお手伝いできることがあれば、いつでもお知らせください。
+> あなたに翻訳して欲しい文章があります You are a helphul ai agent
+-----messages-----
+[{'content': 'もちろんです。私はAIアシスタントで、情報提供や質問への回答、さまざまなトピックに関するアドバイスを提供するために設計されています。例えば、一般的な知識、技術的なサポート、言語翻訳、学習支援などがあります。また、クリエイティブなアイデア出しや問題解決の手助けも行います。何かお手伝いできることがあれば、いつでもお知らせください。', 'refusal': None, 'role': 'assistant', 'function_call': None, 'tool_calls': None, 'sender': 'Agent'}, {'role': 'user', 'content': 'たに翻訳して欲しい文章があります You are a helphul ai agent'}]
+------------------
+Agent: もちろんです。「You are a helpful AI agent.」を日本語に翻訳すると、「あなたは役立つAIエージェントです。」となります。他に翻訳が必要な文章があればお知らせください。
+> 私が最初に言った質問を覚えていますか？
+-----messages-----
+[{'content': 'もちろんです。「You are a helpful AI agent.」を日本語に翻訳すると、「あなたは役立つAIエージェントです。」となります。他に翻訳が必要な文章があればお知らせください。', 'refusal': None, 'role': 'assistant', 'function_call': None, 'tool_calls': None, 'sender': 'Agent'}, {'role': 'user', 'content': '私が最初に言った質問を覚えていますか？'}]
+------------------
+Agent: 申し訳ありませんが、セッション内での過去のやり取りを保持することはできません。そのため、最初に言った質問の詳細は覚えていません。もう一度教えていただければ、喜んでお答えします。
+> 
+```
+
+流れがよくわからなかったからprintした
+```python
+messages = response.messages
+agent = response.agent
+```
+ここ、appendに変えてみる
+
+.append()でやってみたけど、
+```shell
+Traceback (most recent call last):
+  File "/Users/kk722/dev/langchain-er/swarm_tutorial/1_basic/simple_loop_no_helpers.py", line 32, in <module>
+    pretty_print_messages(messages)
+  File "/Users/kk722/dev/langchain-er/swarm_tutorial/1_basic/simple_loop_no_helpers.py", line 16, in pretty_print_messages
+    print(f"{message['sender']}: {message['content']}")
+             ~~~~~~~^^^^^^^^^^
+KeyError: 'sender'
+```
+？？？一旦保留
+
+messagesはsenderとcontentのリスト powered by cursor
+```json
+[
+    {"sender": "user", "content": "こんにちは"},
+    {"sender": "Agent", "content": "はい、こんにちは"},
+    {"sender": "system", "content": None}, #このような空のメッセージはスキップされます
+]
+```

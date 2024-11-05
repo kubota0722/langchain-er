@@ -82,7 +82,7 @@ chain = (
     prompt1 
     | model1 
     | json_parser 
-    | (lambda x: {"assistant_input": x["answer"]})  # 変換関数を追加
+    | (lambda x: {"assistant_input": x["answer"]})  # 変換関数を追加、prompt1の出力とprompt2の入力を繋ぐ
     | prompt2 
     | model2 
     | json_parser
